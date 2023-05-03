@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace sngrl\SphinxSearch;
 
 class SphinxSearch
@@ -50,7 +50,7 @@ class SphinxSearch
             $doc = "'".mysqli_real_escape_string($this->_raw_mysql_connection, strip_tags($doc))."'";
         }
 
-        $extra_ql = '';
+        $extra_ql = [];
         if ($extra)
         {
             foreach ($extra as $key => $value)
@@ -208,9 +208,9 @@ class SphinxSearch
                 $config = isset($this->_config['mapping']) ? $this->_config['mapping']
                     : $this->_config[$this->_index_name];
 
-        // Get the model primary key column name    
-        $primaryKey = isset($config['primaryKey']) ? $config['primaryKey'] : 'id';
-            
+                // Get the model primary key column name
+                $primaryKey = isset($config['primaryKey']) ? $config['primaryKey'] : 'id';
+
                 if ($config) {
                     if (isset($config['repository'])) {
                         $result = call_user_func_array($config['repository'] . '::findInRange',
@@ -226,8 +226,16 @@ class SphinxSearch
                                 ->get();
                         }
                     } else {
-                        $result = \DB::table($config['table'])->whereIn($config['column'], $matchids)
-                            ->orderByRaw(\DB::raw("FIELD($primaryKey, $idString)"))->get();
+                        // Support old version.
+                        if (version_compare(app()->version(), '9.0.0', '<=')) {
+                            $orderBy = \DB::raw("FIELD($primaryKey, $idString)");
+                        } else {
+                            $orderBy = \DB::raw("FIELD($primaryKey, $idString)")->getValue(\DB::connection()->getQueryGrammar());
+                        }
+                        $result = \DB::table($config['table'])
+                            ->whereIn($config['column'], $matchids)
+                            ->orderByRaw($orderBy)
+                            ->get();
                     }
                 }
             } else {
