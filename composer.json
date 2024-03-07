@@ -5,7 +5,9 @@
     "sphinx",
     "sphinxsearch",
     "laravel",
-    "laravel 5"
+    "laravel 5",
+    "laravel 9",
+    "laravel 10"
   ],
   "homepage": "https://github.com/biblioonline/sphinxsearch-l5",
   "license": "MIT",
@@ -13,11 +15,15 @@
     {
       "name": "biblioonline",
       "email": "danik0072@gmail.com"
+    },
+    {
+      "name": "ggmanuilov",
+      "email": "ggmanuilov@gmail.com"
     }
   ],
   "require": {
     "php": ">=5.3.0",
-    "illuminate/support": "~5.0",
+    "illuminate/support": "~5.0|~9|~10",
     "gigablah/sphinxphp": "2.0.8"
   },
   "autoload": {

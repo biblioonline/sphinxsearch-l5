@@ -96,6 +96,24 @@ $results = $sphinx->search('my query', 'index_name')
 	->get();
 ```
 
+Query with bind Shinx index on Model.
+In the file `config/sphinxsearch.php`
+```php
+return array (
+	'host'    => '127.0.0.1',
+	'port'    => 9312,
+	'indexes' => array (
+		'index_name' => array ( 'table' => 'my_keywords_table', 'column' => 'id', 'modelname' => App\Category::class ),
+	)
+);
+```
+Eloquent query.
+```php
+$results = $sphinx->search('my query', 'index_name')->get();
+// $results is an array of App\Category objects.
+```
+
+
 Query with match and sort type specified.
 ```php
 $result = $sphinx->search('my query', 'index_name')
